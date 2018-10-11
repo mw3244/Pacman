@@ -1,5 +1,6 @@
 import pygame
 from maze import Maze
+from eventloop import EventLoop
 
 class Game:
     BLACK = (0, 0, 0)
@@ -8,9 +9,9 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((680, 740))
         pygame.display.set_caption("Pacman Portal")
-        sss = self.screen
+        screen = self.screen
         mazefile = 'images/mazemap.txt'
-        self.maze = Maze(sss, mazefile, 'square')
+        self.maze = Maze(screen, mazefile, 'square', 'shield', 'left_pac_1')
 
     def __str__(self): return 'Game(Pacman Portal), maze=' + str(self.maze) + ')'
 

@@ -5,15 +5,19 @@ class Maze:
     RED = (255, 0, 0)
     BRICK_SIZE = 13
 
-    def __init__(self, screen, mazefile, brickfile):
+    def __init__(self, screen, mazefile, brickfile, shieldfile, pacfile):
         self.screen = screen
         self.filename = mazefile
         with open(self.filename, 'r') as f:
             self.rows = f.readlines()
 
+        self.shields = []
         self.bricks = []
+        self.pacmans = []
         sz = Maze.BRICK_SIZE
         self.brick = ImageRect(screen, brickfile, sz, sz)
+        self.shield = ImageRect(screen, shieldfile, sz, sz)
+        self.pacman = ImageRect(screen, pacfile, sz * 3, sz * 3)
         self.deltax = self.deltay = Maze.BRICK_SIZE
 
         self.build()
@@ -31,7 +35,15 @@ class Maze:
                 col = row [ncol]
                 if col == 'x':
                     self.bricks.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
+                if col == 's':
+                    self.shields.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
+                if col == 'p':
+                    self.pacmans.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
 
     def blitme(self):
         for rect in self.bricks:
             self.screen.blit(self.brick.image, rect)
+        for rect in self.shields:
+            self.screen.blit(self.shield.image, rect)
+        for rect in self.pacmans:
+            self.screen.blit(self.pacman.image,rect)
