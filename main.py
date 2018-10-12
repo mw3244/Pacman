@@ -11,7 +11,7 @@ class Game:
         pygame.display.set_caption("Pacman Portal")
         screen = self.screen
         mazefile = 'images/mazemap.txt'
-        self.maze = Maze(screen, mazefile, 'square', 'shield', 'left_pac_1')
+        self.maze = Maze(screen, mazefile, 'square', 'shield', 'left_pac_1', 'powerpill')
 
     def __str__(self): return 'Game(Pacman Portal), maze=' + str(self.maze) + ')'
 
