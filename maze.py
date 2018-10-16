@@ -5,6 +5,7 @@ class Maze:
     RED = (255, 0, 0)
     BRICK_SIZE = 13
     TABLET_SIZE = 7
+    PAC_SIZE = 39
 
     def __init__(self, screen, mazefile, brickfile, shieldfile, pacfile, powerfile, tabletfile, clydefile, pinkyfile,
                  inkyfile, blinkyfile):
@@ -19,15 +20,17 @@ class Maze:
         self.tablets = []
         self.sz = Maze.BRICK_SIZE
         self.tsz = Maze.TABLET_SIZE
+        self.psz = Maze.PAC_SIZE
         self.brick = ImageRect(screen, brickfile, self.sz, self.sz)
         self.shield = ImageRect(screen, shieldfile, self.sz, self.sz)
-        self.pacman = ImageRect(screen, pacfile, self.sz * 2, self.sz * 2)
+        self.pacman = ImageRect(screen, pacfile, self.psz, self.psz)
         self.clyde = ImageRect(screen, clydefile, self.sz * 2, self.sz * 2)
         self.pinky = ImageRect(screen, pinkyfile, self.sz * 2, self.sz * 2)
         self.inky = ImageRect(screen, inkyfile, self.sz * 2, self.sz * 2)
         self.blinky = ImageRect(screen, blinkyfile, self.sz * 2, self.sz * 2)
         self.powerpill = ImageRect(screen, powerfile, self.sz, self.sz)
         self.tablet = ImageRect(screen, tabletfile, self.tsz, self.tsz)
+
         self.deltax = self.deltay = Maze.BRICK_SIZE
 
         self.build()
@@ -48,7 +51,7 @@ class Maze:
                 if col == 's':
                     self.shields.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
                 if col == 'P':
-                    self.pacman.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
+                    self.pacman.rect = (pygame.Rect(ncol * dx, nrow * dy, self.psz, self.psz))
                 if col == 'p':
                     self.powerpills.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
                 if col == 't':

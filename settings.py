@@ -4,3 +4,4 @@ class Settings():
         self.screen_height = 740
         self.bg_color = (0, 0, 0)
         self.movement = 1
+        self.pac_animation_clock = 30

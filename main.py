@@ -11,7 +11,7 @@ class Game:
         pygame.display.set_caption("Pacman Portal")
         screen = self.screen
         mazefile = 'images/mazemap.txt'
-        self.maze = Maze(screen, mazefile, 'square', 'shield', 'left_pac_1', 'powerpill', 'tablet', 'up_clyde_1', 'up_pinky_1',
+        self.maze = Maze(screen, mazefile, 'square', 'shield', 'left_bigman_1', 'powerpill', 'tablet', 'up_clyde_1', 'up_pinky_1',
                          'up_inky_1', 'up_blinky_1')
 
     def __str__(self): return 'Game(Pacman Portal), maze=' + str(self.maze) + ')'
@@ -21,7 +21,7 @@ class Game:
 
         while not eloop.finished:
             eloop.check_events(self.maze)
-            eloop.update(self.maze, self.settings)
+            eloop.update(self.maze, self.settings, self.screen)
             self.update_screen()
 
     def update_screen(self):
