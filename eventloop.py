@@ -11,6 +11,10 @@ class EventLoop:
         self.pac_moving_right = False
         self.pac_moving_up = False
         self.pac_moving_down = False
+        self.pac_left_animation = 'images/left_bigman_1.png'
+        self.pac_right_animation = 'images/right_bigman_1.png'
+        self.pac_up_animation = 'images/up_bigman_1.png'
+        self.pac_down_animation = 'images/down_bigman_1.png'
         self.pac_animation_clock = self.settings.pac_animation_clock
 
     def __str__(self):
@@ -42,7 +46,7 @@ class EventLoop:
     def update(self, maze, settings, screen):
         if self.pac_moving_left == True:
             maze.pacman.rect.centerx -= settings.movement
-            img = pygame.image.load('images/left_bigman_1.png')
+            img = pygame.image.load(self.pac_left_animation)
             img = pygame.transform.scale(img, (maze.psz, maze.psz))
             maze.pacman.image = img
         if maze.pacman.rect.collidelist(maze.bricks) >= 0 or maze.pacman.rect.collidelist(maze.shields) >= 0:
@@ -50,7 +54,7 @@ class EventLoop:
 
         if self.pac_moving_right == True:
             maze.pacman.rect.centerx += settings.movement
-            img = pygame.image.load('images/right_bigman_1.png')
+            img = pygame.image.load(self.pac_right_animation)
             img = pygame.transform.scale(img, (maze.psz, maze.psz))
             maze.pacman.image = img
         if maze.pacman.rect.collidelist(maze.bricks) >= 0 or maze.pacman.rect.collidelist(maze.shields) >= 0:
@@ -58,7 +62,7 @@ class EventLoop:
 
         if self.pac_moving_up == True:
             maze.pacman.rect.centery -= settings.movement
-            img = pygame.image.load('images/up_bigman_1.png')
+            img = pygame.image.load(self.pac_up_animation)
             img = pygame.transform.scale(img, (maze.psz, maze.psz))
             maze.pacman.image = img
         if maze.pacman.rect.collidelist(maze.bricks) >= 0 or maze.pacman.rect.collidelist(maze.shields) >= 0:
@@ -66,7 +70,7 @@ class EventLoop:
 
         if self.pac_moving_down == True:
             maze.pacman.rect.centery += settings.movement
-            img = pygame.image.load('images/down_bigman_1.png')
+            img = pygame.image.load(self.pac_down_animation)
             img = pygame.transform.scale(img, (maze.psz, maze.psz))
             maze.pacman.image = img
         if maze.pacman.rect.collidelist(maze.bricks) >= 0 or maze.pacman.rect.collidelist(maze.shields) >= 0:
@@ -77,5 +81,26 @@ class EventLoop:
             del maze.tablets[tablet_collision]
 
         self.pac_animation_clock -= 1
-        if self.pac_animation_clock == 0:
+
+        cascade_stop = False
+        if self.pac_animation_clock <= 0:
+            if self.pac_left_animation == 'images/bigman_3.png':
+                self.pac_left_animation = 'images/left_bigman_1.png'
+                self.pac_right_animation = 'images/right_bigman_1.png'
+                self.pac_up_animation = 'images/up_bigman_1.png'
+                self.pac_down_animation = 'images/down_bigman_1.png'
+                cascade_stop = True
+
+            if self.pac_left_animation == 'images/left_bigman_2.png':
+                self.pac_left_animation = 'images/bigman_3.png'
+                self.pac_right_animation = 'images/bigman_3.png'
+                self.pac_up_animation = 'images/bigman_3.png'
+                self.pac_down_animation = 'images/bigman_3.png'
+
+            if self.pac_left_animation == 'images/left_bigman_1.png' and cascade_stop == False:
+                self.pac_left_animation = 'images/left_bigman_2.png'
+                self.pac_right_animation = 'images/right_bigman_2.png'
+                self.pac_up_animation = 'images/up_bigman_2.png'
+                self.pac_down_animation = 'images/down_bigman_2.png'
+
             self.pac_animation_clock = self.settings.pac_animation_clock
