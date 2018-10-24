@@ -1,5 +1,6 @@
 import pygame
 from imagerect import ImageRect
+from dijkstra import Dijkstra
 
 class Maze:
     RED = (255, 0, 0)
@@ -32,6 +33,10 @@ class Maze:
         self.tablet = ImageRect(screen, tabletfile, self.tsz, self.tsz)
 
         self.deltax = self.deltay = Maze.BRICK_SIZE
+        self.nodeDict = {}
+        self.currentnodeDict = {}
+        self.nodeXYDict = {}
+        self.XYnodeDict = {}
 
         self.build()
 
@@ -64,6 +69,44 @@ class Maze:
                     self.inky.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
                 if col == 'b':
                     self.blinky.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
+                if col != 'x' and col != 'q' and col != '\n':
+                    if self.eightwaycheck(nrow, ncol):
+                        self.nodeXYDict[str(str(nrow) + str(ncol))] = ncol * dx, nrow * dy
+                        self.XYnodeDict[str(str(ncol * dx)+ ' ' + str(nrow * dy))] = str(str(nrow) + str(ncol))
+                        if self.eightwaycheck(nrow, ncol - 1):
+                            self.currentnodeDict[str(str(nrow) + str(ncol - 1))] = 1
+                        if self.eightwaycheck(nrow, ncol + 1):
+                            self.currentnodeDict[str(str(nrow) + str(ncol + 1))] = 1
+                        if self.eightwaycheck(nrow + 1, ncol):
+                            self.currentnodeDict[str(str(nrow + 1) + str(ncol))] = 1
+                        if self.eightwaycheck(nrow - 1, ncol):
+                            self.currentnodeDict[str(str(nrow - 1) + str(ncol))] = 1
+                        self.nodeDict[str(str(nrow) + str(ncol))] = self.currentnodeDict
+                        self.currentnodeDict = {}
+        #print(self.nodeXYDict['82'])
+        #XY = self.nodeXYDict['82']
+        #print(XY[0])
+        #print(self.XYnodeDict)
+        #Dijkstra('2921', '4421', self.nodeDict)
+
+    def eightwaycheck (self, nrow, ncol):
+        if self.rows[nrow - 1][ncol - 1] == 'x':
+            return False
+        if self.rows[nrow][ncol - 1] == 'x':
+            return False
+        if self.rows[nrow + 1][ncol - 1] == 'x':
+            return False
+        if self.rows[nrow - 1][ncol] == 'x':
+            return False
+        if self.rows[nrow + 1][ncol] == 'x':
+            return False
+        if self.rows[nrow - 1][ncol + 1] == 'x':
+            return False
+        if self.rows[nrow][ncol + 1] == 'x':
+            return False
+        if self.rows[nrow + 1][ncol + 1] == 'x':
+            return False
+        return True
 
     def blitme(self):
         for rect in self.bricks:

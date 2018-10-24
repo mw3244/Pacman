@@ -17,11 +17,11 @@ class Game:
     def __str__(self): return 'Game(Pacman Portal), maze=' + str(self.maze) + ')'
 
     def play(self):
-        eloop = EventLoop(finished = False)
+        eloop = EventLoop(self.maze, finished = False)
 
         while not eloop.finished:
-            eloop.check_events(self.maze)
-            eloop.update(self.maze, self.settings, self.screen)
+            eloop.check_events()
+            eloop.update(self.settings, self.screen)
             self.update_screen()
 
     def update_screen(self):
