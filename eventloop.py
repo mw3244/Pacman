@@ -1,15 +1,22 @@
 import pygame
 from settings import Settings
 import sys
+import time
 from imagerect import ImageRect
 from dijkstra import Dijkstra
+from button import Text
+from stats import Stats
 import math
 
 class EventLoop:
-    def __init__(self, maze, finished):
+    def __init__(self, maze, screen, finished):
         self.settings = Settings()
         self.maze = maze
         self.finished = finished
+        self.screen = screen
+
+        self.life_up_check = 0
+
         self.pac_moving_left = False
         self.pac_moving_right = False
         self.pac_moving_up = False
@@ -139,7 +146,106 @@ class EventLoop:
                 if event.key == pygame.K_DOWN:
                     self.pac_moving_down = False
 
-    def update(self, settings, screen):
+    def update(self, settings, screen, stats):
+        if (self.maze.pacman.rect.colliderect(self.maze.clyde.rect) or self.maze.pacman.rect.colliderect(self.maze.pinky.rect)
+        or self.maze.pacman.rect.colliderect(self.maze.inky.rect) or self.maze.pacman.rect.colliderect(self.maze.blinky.rect)):
+            img = pygame.image.load('images/pac_death_1.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_2.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_3.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_4.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_5.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_6.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_7.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_8.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_9.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_10.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_11.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(0.1)
+            img = pygame.image.load('images/pac_death_12.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.maze.blitme()
+            pygame.display.flip()
+            time.sleep(1)
+
+            stats.lives -= 1
+            if stats.lives == 0:
+                print("Game over!")
+            self.maze.pacman.rect.x = self.maze.pacman_init_x
+            self.maze.pacman.rect.y = self.maze.pacman_init_y
+            self.maze.clyde.rect.x = self.maze.clyde_init_x
+            self.maze.clyde.rect.y = self.maze.clyde_init_y
+            self.maze.pinky.rect.x = self.maze.pinky_init_x
+            self.maze.pinky.rect.y = self.maze.pinky_init_y
+            self.maze.inky.rect.x = self.maze.inky_init_x
+            self.maze.inky.rect.y = self.maze.inky_init_y
+            self.maze.blinky.rect.x = self.maze.blinky_init_x
+            self.maze.blinky.rect.y = self.maze.blinky_init_y
+            self.clyde_path = []
+            self.pinky_path = []
+            self.inky_path = []
+            self.blinky_path = []
+            img = pygame.image.load('images/left_bigman_1.png')
+            img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
+            self.maze.pacman.image = img
+            self.screen.blit(self.maze.pacman.image, self.maze.pacman.rect)
+            pygame.display.flip()
+            time.sleep(2)
+
         if self.pac_moving_left == True:
             self.maze.pacman.rect.centerx -= settings.movement
             img = pygame.image.load(self.pac_left_animation)
@@ -175,6 +281,10 @@ class EventLoop:
         tablet_collision = self.maze.pacman.rect.collidelist(self.maze.tablets)
         if tablet_collision >= 0:
             del self.maze.tablets[tablet_collision]
+            stats.score += 20
+            self.life_up_check += 20
+
+
 
         self.pac_animation_clock -= 1
 
@@ -264,6 +374,10 @@ class EventLoop:
         self.updateGhost("pinky")
         self.updateGhost("inky")
         self.updateGhost("blinky")
+
+        if self.life_up_check >= 10000:
+            stats.lives += 1
+            self.life_up_check = 0
 
     def updateGhost(self, identifier):
         if identifier == "clyde":

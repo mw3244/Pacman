@@ -2,6 +2,7 @@ import pygame
 from maze import Maze
 from settings import Settings
 from eventloop import EventLoop
+from stats import Stats
 
 class Game:
     def __init__(self):
@@ -10,18 +11,19 @@ class Game:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Pacman Portal")
         screen = self.screen
+        self.stats = Stats()
         mazefile = 'images/mazemap.txt'
         self.maze = Maze(screen, mazefile, 'square', 'shield', 'left_bigman_1', 'powerpill', 'tablet', 'up_clyde_1', 'up_pinky_1',
-                         'up_inky_1', 'up_blinky_1')
+                         'up_inky_1', 'up_blinky_1', self.stats)
 
     def __str__(self): return 'Game(Pacman Portal), maze=' + str(self.maze) + ')'
 
     def play(self):
-        eloop = EventLoop(self.maze, finished = False)
+        eloop = EventLoop(self.maze, self.screen, finished = False)
 
         while not eloop.finished:
             eloop.check_events()
-            eloop.update(self.settings, self.screen)
+            eloop.update(self.settings, self.screen, self.stats)
             self.update_screen()
 
     def update_screen(self):

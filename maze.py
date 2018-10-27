@@ -1,6 +1,10 @@
 import pygame
 from imagerect import ImageRect
 from dijkstra import Dijkstra
+from button import Text
+from button import Picture
+from stats import Stats
+
 
 class Maze:
     RED = (255, 0, 0)
@@ -9,16 +13,22 @@ class Maze:
     PAC_SIZE = 39
 
     def __init__(self, screen, mazefile, brickfile, shieldfile, pacfile, powerfile, tabletfile, clydefile, pinkyfile,
-                 inkyfile, blinkyfile):
+                 inkyfile, blinkyfile, stats):
         self.screen = screen
         self.filename = mazefile
+        self.stats = stats
         with open(self.filename, 'r') as f:
             self.rows = f.readlines()
+
+
+        self.score_text = Text(self.screen, "SCORE:", 50, 50, 20, 20, (255, 255, 255))
+        self.lives_text = Text(self.screen, "LIVES:", 50, 50, 300, 20, (255, 255, 255))
 
         self.shields = []
         self.bricks = []
         self.powerpills = []
         self.tablets = []
+        self.life = [None] * 5
         self.sz = Maze.BRICK_SIZE
         self.tsz = Maze.TABLET_SIZE
         self.psz = Maze.PAC_SIZE
@@ -31,12 +41,24 @@ class Maze:
         self.blinky = ImageRect(screen, blinkyfile, self.sz * 2, self.sz * 2)
         self.powerpill = ImageRect(screen, powerfile, self.sz, self.sz)
         self.tablet = ImageRect(screen, tabletfile, self.tsz, self.tsz)
+        self.life_image = pygame.image.load('images/left_pac_1.png')
 
         self.deltax = self.deltay = Maze.BRICK_SIZE
         self.nodeDict = {}
         self.currentnodeDict = {}
         self.nodeXYDict = {}
         self.XYnodeDict = {}
+
+        self.pacman_init_x = 0
+        self.pacman_init_y = 0
+        self.clyde_init_x = 0
+        self.clyde_init_y = 0
+        self.pinky_init_x = 0
+        self.pinky_init_y = 0
+        self.inky_init_x = 0
+        self.inky_init_y = 0
+        self.blinky_init_x = 0
+        self.blinky_init_y = 0
 
         self.build()
 
@@ -57,18 +79,28 @@ class Maze:
                     self.shields.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
                 if col == 'P':
                     self.pacman.rect = (pygame.Rect(ncol * dx, nrow * dy, self.psz, self.psz))
+                    self.pacman_init_x = ncol * dx
+                    self.pacman_init_y = nrow * dy
                 if col == 'p':
                     self.powerpills.append(pygame.Rect(ncol * dx, nrow * dy, w, h))
                 if col == 't':
                     self.tablets.append(pygame.Rect(ncol * dx, nrow * dy, self.tsz, self.tsz))
                 if col == 'c':
                     self.clyde.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
+                    self.clyde_init_x = ncol * dx
+                    self.clyde_init_y = nrow * dy
                 if col == 'n':
                     self.pinky.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
+                    self.pinky_init_x = ncol * dx
+                    self.pinky_init_y = nrow * dy
                 if col == 'i':
                     self.inky.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
+                    self.inky_init_x = ncol * dx
+                    self.inky_init_y = nrow * dy
                 if col == 'b':
                     self.blinky.rect = (pygame.Rect(ncol * dx, nrow * dy, self.sz * 2, self.sz * 2))
+                    self.blinky_init_x = ncol * dx
+                    self.blinky_init_y = nrow * dy
                 if col != 'x' and col != 'q' and col != '\n':
                     if self.eightwaycheck(nrow, ncol):
                         self.nodeXYDict[str(str(nrow) + str(ncol))] = ncol * dx, nrow * dy
@@ -122,3 +154,11 @@ class Maze:
         self.screen.blit(self.pinky.image, self.pinky.rect)
         self.screen.blit(self.inky.image, self.inky.rect)
         self.screen.blit(self.blinky.image, self.blinky.rect)
+        self.score_text.draw_text()
+        self.score = Text(self.screen, str(self.stats.score), 50, 50, 155, 20, (255, 255, 255))
+        self.score.draw_text()
+        self.lives_text.draw_text()
+        for i in range (self.stats.lives):
+            if i <= 4:
+                self.life[i] = Picture(self.screen, 420 + (i * 30), 20, self.life_image)
+                self.life[i].draw_picture()
