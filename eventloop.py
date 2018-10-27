@@ -178,22 +178,20 @@ class EventLoop:
 
         self.pac_animation_clock -= 1
 
-        cascade_stop = False
         if self.pac_animation_clock <= 0:
             if self.pac_left_animation == 'images/bigman_3.png':
                 self.pac_left_animation = 'images/left_bigman_1.png'
                 self.pac_right_animation = 'images/right_bigman_1.png'
                 self.pac_up_animation = 'images/up_bigman_1.png'
                 self.pac_down_animation = 'images/down_bigman_1.png'
-                cascade_stop = True
 
-            if self.pac_left_animation == 'images/left_bigman_2.png':
+            elif self.pac_left_animation == 'images/left_bigman_2.png':
                 self.pac_left_animation = 'images/bigman_3.png'
                 self.pac_right_animation = 'images/bigman_3.png'
                 self.pac_up_animation = 'images/bigman_3.png'
                 self.pac_down_animation = 'images/bigman_3.png'
 
-            if self.pac_left_animation == 'images/left_bigman_1.png' and cascade_stop == False:
+            elif self.pac_left_animation == 'images/left_bigman_1.png':
                 self.pac_left_animation = 'images/left_bigman_2.png'
                 self.pac_right_animation = 'images/right_bigman_2.png'
                 self.pac_up_animation = 'images/up_bigman_2.png'
