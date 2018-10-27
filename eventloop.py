@@ -18,6 +18,93 @@ class EventLoop:
         self.pac_right_animation = 'images/right_bigman_1.png'
         self.pac_up_animation = 'images/up_bigman_1.png'
         self.pac_down_animation = 'images/down_bigman_1.png'
+
+        self.clyde_up_1_img = pygame.image.load('images/up_clyde_1.png')
+        self.clyde_up_1_img = pygame.transform.scale(self.clyde_up_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_up_2_img = pygame.image.load('images/up_clyde_2.png')
+        self.clyde_up_2_img = pygame.transform.scale(self.clyde_up_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_left_1_img = pygame.image.load('images/left_clyde_1.png')
+        self.clyde_left_1_img = pygame.transform.scale(self.clyde_left_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_left_2_img = pygame.image.load('images/left_clyde_2.png')
+        self.clyde_left_2_img = pygame.transform.scale(self.clyde_left_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_right_1_img = pygame.image.load('images/right_clyde_1.png')
+        self.clyde_right_1_img = pygame.transform.scale(self.clyde_right_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_right_2_img = pygame.image.load('images/right_clyde_2.png')
+        self.clyde_right_2_img = pygame.transform.scale(self.clyde_right_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_down_1_img = pygame.image.load('images/down_clyde_1.png')
+        self.clyde_down_1_img = pygame.transform.scale(self.clyde_down_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_down_2_img = pygame.image.load('images/down_clyde_2.png')
+        self.clyde_down_2_img = pygame.transform.scale(self.clyde_down_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.clyde_up_img = self.clyde_up_1_img
+        self.clyde_down_img = self.clyde_down_1_img
+        self.clyde_left_img = self.clyde_left_1_img
+        self.clyde_right_img = self.clyde_right_1_img
+
+        self.pinky_up_1_img = pygame.image.load('images/up_pinky_1.png')
+        self.pinky_up_1_img = pygame.transform.scale(self.pinky_up_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_up_2_img = pygame.image.load('images/up_pinky_2.png')
+        self.pinky_up_2_img = pygame.transform.scale(self.pinky_up_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_left_1_img = pygame.image.load('images/left_pinky_1.png')
+        self.pinky_left_1_img = pygame.transform.scale(self.pinky_left_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_left_2_img = pygame.image.load('images/left_pinky_2.png')
+        self.pinky_left_2_img = pygame.transform.scale(self.pinky_left_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_right_1_img = pygame.image.load('images/right_pinky_1.png')
+        self.pinky_right_1_img = pygame.transform.scale(self.pinky_right_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_right_2_img = pygame.image.load('images/right_pinky_2.png')
+        self.pinky_right_2_img = pygame.transform.scale(self.pinky_right_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_down_1_img = pygame.image.load('images/down_pinky_1.png')
+        self.pinky_down_1_img = pygame.transform.scale(self.pinky_down_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_down_2_img = pygame.image.load('images/down_pinky_2.png')
+        self.pinky_down_2_img = pygame.transform.scale(self.pinky_down_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.pinky_up_img = self.pinky_up_1_img
+        self.pinky_down_img = self.pinky_down_1_img
+        self.pinky_left_img = self.pinky_left_1_img
+        self.pinky_right_img = self.pinky_right_1_img
+
+        self.inky_up_1_img = pygame.image.load('images/up_inky_1.png')
+        self.inky_up_1_img = pygame.transform.scale(self.inky_up_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_up_2_img = pygame.image.load('images/up_inky_2.png')
+        self.inky_up_2_img = pygame.transform.scale(self.inky_up_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_left_1_img = pygame.image.load('images/left_inky_1.png')
+        self.inky_left_1_img = pygame.transform.scale(self.inky_left_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_left_2_img = pygame.image.load('images/left_inky_2.png')
+        self.inky_left_2_img = pygame.transform.scale(self.inky_left_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_right_1_img = pygame.image.load('images/right_inky_1.png')
+        self.inky_right_1_img = pygame.transform.scale(self.inky_right_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_right_2_img = pygame.image.load('images/right_inky_2.png')
+        self.inky_right_2_img = pygame.transform.scale(self.inky_right_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_down_1_img = pygame.image.load('images/down_inky_1.png')
+        self.inky_down_1_img = pygame.transform.scale(self.inky_down_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_down_2_img = pygame.image.load('images/down_inky_2.png')
+        self.inky_down_2_img = pygame.transform.scale(self.inky_down_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.inky_up_img = self.inky_up_1_img
+        self.inky_down_img = self.inky_down_1_img
+        self.inky_left_img = self.inky_left_1_img
+        self.inky_right_img = self.inky_right_1_img
+
+        self.blinky_up_1_img = pygame.image.load('images/up_blinky_1.png')
+        self.blinky_up_1_img = pygame.transform.scale(self.blinky_up_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_up_2_img = pygame.image.load('images/up_blinky_2.png')
+        self.blinky_up_2_img = pygame.transform.scale(self.blinky_up_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_left_1_img = pygame.image.load('images/left_blinky_1.png')
+        self.blinky_left_1_img = pygame.transform.scale(self.blinky_left_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_left_2_img = pygame.image.load('images/left_blinky_2.png')
+        self.blinky_left_2_img = pygame.transform.scale(self.blinky_left_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_right_1_img = pygame.image.load('images/right_blinky_1.png')
+        self.blinky_right_1_img = pygame.transform.scale(self.blinky_right_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_right_2_img = pygame.image.load('images/right_blinky_2.png')
+        self.blinky_right_2_img = pygame.transform.scale(self.blinky_right_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_down_1_img = pygame.image.load('images/down_blinky_1.png')
+        self.blinky_down_1_img = pygame.transform.scale(self.blinky_down_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_down_2_img = pygame.image.load('images/down_blinky_2.png')
+        self.blinky_down_2_img = pygame.transform.scale(self.blinky_down_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blinky_up_img = self.blinky_up_1_img
+        self.blinky_down_img = self.blinky_down_1_img
+        self.blinky_left_img = self.blinky_left_1_img
+        self.blinky_right_img = self.blinky_right_1_img
+
+        self.ghost_animation_queue = 0
+
         self.pac_animation_clock = self.settings.pac_animation_clock
         self.search_clock = self.settings.search_clock
         self.clyde_path = []
@@ -112,6 +199,47 @@ class EventLoop:
                 self.pac_up_animation = 'images/up_bigman_2.png'
                 self.pac_down_animation = 'images/down_bigman_2.png'
 
+            if self.ghost_animation_queue == 0:
+                self.clyde_up_img = self.clyde_up_2_img
+                self.clyde_down_img = self.clyde_down_2_img
+                self.clyde_left_img = self.clyde_left_2_img
+                self.clyde_right_img = self.clyde_right_2_img
+                self.pinky_up_img = self.pinky_up_2_img
+                self.pinky_down_img = self.pinky_down_2_img
+                self.pinky_left_img = self.pinky_left_2_img
+                self.pinky_right_img = self.pinky_right_2_img
+                self.inky_up_img = self.inky_up_2_img
+                self.inky_down_img = self.inky_down_2_img
+                self.inky_left_img = self.inky_left_2_img
+                self.inky_right_img = self.inky_right_2_img
+                self.blinky_up_img = self.blinky_up_2_img
+                self.blinky_down_img = self.blinky_down_2_img
+                self.blinky_left_img = self.blinky_left_2_img
+                self.blinky_right_img = self.blinky_right_2_img
+
+                self.ghost_animation_queue += 1
+            elif self.ghost_animation_queue == 1:
+                self.clyde_up_img = self.clyde_up_1_img
+                self.clyde_down_img = self.clyde_down_1_img
+                self.clyde_left_img = self.clyde_left_1_img
+                self.clyde_right_img = self.clyde_right_1_img
+                self.pinky_up_img = self.pinky_up_1_img
+                self.pinky_down_img = self.pinky_down_1_img
+                self.pinky_left_img = self.pinky_left_1_img
+                self.pinky_right_img = self.pinky_right_1_img
+                self.inky_up_img = self.inky_up_1_img
+                self.inky_down_img = self.inky_down_1_img
+                self.inky_left_img = self.inky_left_1_img
+                self.inky_right_img = self.inky_right_1_img
+                self.blinky_up_img = self.blinky_up_1_img
+                self.blinky_down_img = self.blinky_down_1_img
+                self.blinky_left_img = self.blinky_left_1_img
+                self.blinky_right_img = self.blinky_right_1_img
+
+                self.ghost_animation_queue -= 1
+
+
+
             self.pac_animation_clock = self.settings.pac_animation_clock
 
         self.search_clock -= 1
@@ -170,12 +298,44 @@ class EventLoop:
                 del path[0]
             if XDest > xObj:
                 xObj+= self.settings.ghost_movement
+                if identifier == "clyde":
+                    self.maze.clyde.image = self.clyde_right_img
+                elif identifier == "pinky":
+                    self.maze.pinky.image = self.pinky_right_img
+                elif identifier == "inky":
+                    self.maze.inky.image = self.inky_right_img
+                elif identifier == "blinky":
+                    self.maze.blinky.image = self.blinky_right_img
             elif XDest < xObj:
                 xObj-= self.settings.ghost_movement
+                if identifier == "clyde":
+                    self.maze.clyde.image = self.clyde_left_img
+                elif identifier == "pinky":
+                    self.maze.pinky.image = self.pinky_left_img
+                elif identifier == "inky":
+                    self.maze.inky.image = self.inky_left_img
+                elif identifier == "blinky":
+                    self.maze.blinky.image = self.blinky_left_img
             if YDest > yObj:
                 yObj+= self.settings.ghost_movement
+                if identifier == "clyde":
+                    self.maze.clyde.image = self.clyde_down_img
+                elif identifier == "pinky":
+                    self.maze.pinky.image = self.pinky_down_img
+                elif identifier == "inky":
+                    self.maze.inky.image = self.inky_down_img
+                elif identifier == "blinky":
+                    self.maze.blinky.image = self.blinky_down_img
             elif YDest < yObj:
                 yObj-= self.settings.ghost_movement
+                if identifier == "clyde":
+                    self.maze.clyde.image = self.clyde_up_img
+                elif identifier == "pinky":
+                    self.maze.pinky.image = self.pinky_up_img
+                elif identifier == "inky":
+                    self.maze.inky.image = self.inky_up_img
+                elif identifier == "blinky":
+                    self.maze.blinky.image = self.blinky_up_img
 
             if identifier == "clyde":
                 self.maze.clyde.rect.centerx = xObj
