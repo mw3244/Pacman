@@ -8,6 +8,7 @@ from button import Text
 from stats import Stats
 import math
 import random
+from button import Picture
 
 class EventLoop:
     def __init__(self, maze, screen, finished):
@@ -111,6 +112,30 @@ class EventLoop:
         self.blinky_left_img = self.blinky_left_1_img
         self.blinky_right_img = self.blinky_right_1_img
 
+        self.blue_1_img = pygame.image.load('images/blue_1.png')
+        self.blue_1_img = pygame.transform.scale(self.blue_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.blue_2_img = pygame.image.load('images/blue_2.png')
+        self.blue_2_img = pygame.transform.scale(self.blue_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+
+        self.white_1_img = pygame.image.load('images/white_1.png')
+        self.white_1_img = pygame.transform.scale(self.white_1_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.white_2_img = pygame.image.load('images/white_2.png')
+        self.white_2_img = pygame.transform.scale(self.white_2_img, (self.maze.sz * 2, self.maze.sz * 2))
+
+        self.eyes_up_img = pygame.image.load('images/eyes_up.png')
+        self.eyes_up_img = pygame.transform.scale(self.eyes_up_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.eyes_down_img = pygame.image.load('images/eyes_down.png')
+        self.eyes_down_img = pygame.transform.scale(self.eyes_down_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.eyes_left_img = pygame.image.load('images/eyes_left.png')
+        self.eyes_left_img = pygame.transform.scale(self.eyes_left_img, (self.maze.sz * 2, self.maze.sz * 2))
+        self.eyes_right_img = pygame.image.load('images/eyes_right.png')
+        self.eyes_right_img = pygame.transform.scale(self.eyes_right_img, (self.maze.sz * 2, self.maze.sz * 2))
+
+        self.one_strike_img = pygame.image.load('images/200.png')
+        self.two_strike_img = pygame.image.load('images/400.png')
+        self.three_strike_img = pygame.image.load('images/800.png')
+        self.four_strike_img = pygame.image.load('images/1600.png')
+
         self.ghost_animation_queue = 0
 
         self.pac_animation_clock = self.settings.pac_animation_clock
@@ -122,6 +147,22 @@ class EventLoop:
         self.ghost_move_OK = False
         self.fleeing = False
         self.fleeing_clock = self.settings.fleeing_clock
+        self.blue_white_switch = self.settings.blue_white_switch
+        self.blue_white_switch_fast = self.settings.blue_white_switch_fast
+        self.white = False
+
+        self.clyde_resetting = False
+        self.pinky_resetting = False
+        self.inky_resetting = False
+        self.blinky_resetting = False
+        self.resetting_count = 0
+
+        self.chomp = pygame.mixer.Sound('sound/pacman_chomp.wav')
+        self.death = pygame.mixer.Sound('sound/pacman_death.wav')
+        self.ghost_eat = pygame.mixer.Sound('sound/pacman_eatghost.wav')
+        self.extra_pac = pygame.mixer.Sound('sound/pacman_extrapac.wav')
+        self.jingle = pygame.mixer.Sound('sound/pacman_beginning.wav')
+        self.fruit_eat = pygame.mixer.Sound('sound/pacman_eatfruit.wav')
 
     def __str__(self):
         return 'eventloop, finished= ' + str(self.finished) + ')'
@@ -153,6 +194,7 @@ class EventLoop:
         if (self.maze.pacman.rect.colliderect(self.maze.clyde.rect) or self.maze.pacman.rect.colliderect(self.maze.pinky.rect)
         or self.maze.pacman.rect.colliderect(self.maze.inky.rect) or self.maze.pacman.rect.colliderect(self.maze.blinky.rect))\
         and not self.fleeing:
+            self.death.play()
             img = pygame.image.load('images/pac_death_1.png')
             img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
             self.maze.pacman.image = img
@@ -253,9 +295,110 @@ class EventLoop:
         if not self.maze.tablets and not self.maze.powerpills:
             self.maze.shields = []
             self.maze.bricks = []
+            self.clyde_path = []
+            self.pinky_path = []
+            self.inky_path = []
+            self.blinky_path = []
             self.fleeing = False
             self.maze.build()
             time.sleep(2)
+
+        if self.maze.pacman.rect.colliderect(self.maze.clyde.rect) and self.fleeing and not self.clyde_resetting:
+            self.clyde_resetting = True
+            self.resetting_count += 1
+            self.ghost_eat.play()
+            if self.resetting_count == 1:
+                stats.score += 200
+                Picture(self.screen, self.maze.clyde.rect.x, self.maze.clyde.rect.y, self.one_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 2:
+                stats.score += 400
+                Picture(self.screen, self.maze.clyde.rect.x, self.maze.clyde.rect.y, self.two_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 3:
+                stats.score += 800
+                Picture(self.screen, self.maze.clyde.rect.x, self.maze.clyde.rect.y, self.three_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 4:
+                stats.score += 1600
+                Picture(self.screen, self.maze.clyde.rect.x, self.maze.clyde.rect.y, self.four_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+        if self.maze.pacman.rect.colliderect(self.maze.pinky.rect) and self.fleeing and not self.pinky_resetting:
+            self.pinky_resetting = True
+            self.resetting_count += 1
+            self.ghost_eat.play()
+            if self.resetting_count == 1:
+                stats.score += 200
+                Picture(self.screen, self.maze.pinky.rect.x, self.maze.pinky.rect.y, self.one_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 2:
+                stats.score += 400
+                Picture(self.screen, self.maze.pinky.rect.x, self.maze.pinky.rect.y, self.two_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 3:
+                stats.score += 800
+                Picture(self.screen, self.maze.pinky.rect.x, self.maze.pinky.rect.y, self.three_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 4:
+                stats.score += 1600
+                Picture(self.screen, self.maze.pinky.rect.x, self.maze.pinky.rect.y, self.four_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+        if self.maze.pacman.rect.colliderect(self.maze.inky.rect) and self.fleeing and not self.inky_resetting:
+            self.inky_resetting = True
+            self.resetting_count += 1
+            self.ghost_eat.play()
+            if self.resetting_count == 1:
+                stats.score += 200
+                Picture(self.screen, self.maze.inky.rect.x, self.maze.inky.rect.y, self.one_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 2:
+                stats.score += 400
+                Picture(self.screen, self.maze.inky.rect.x, self.maze.inky.rect.y, self.two_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 3:
+                stats.score += 800
+                Picture(self.screen, self.maze.inky.rect.x, self.maze.inky.rect.y, self.three_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 4:
+                stats.score += 1600
+                Picture(self.screen, self.maze.inky.rect.x, self.maze.inky.rect.y, self.four_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+        if self.maze.pacman.rect.colliderect(self.maze.blinky.rect) and self.fleeing and not self.blinky_resetting:
+            self.blinky_resetting = True
+            self.resetting_count += 1
+            self.ghost_eat.play()
+            if self.resetting_count == 1:
+                stats.score += 200
+                Picture(self.screen, self.maze.blinky.rect.x, self.maze.blinky.rect.y, self.one_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 2:
+                stats.score += 400
+                Picture(self.screen, self.maze.blinky.rect.x, self.maze.blinky.rect.y, self.two_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 3:
+                stats.score += 800
+                Picture(self.screen, self.maze.blinky.rect.x, self.maze.blinky.rect.y, self.three_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
+            elif self.resetting_count == 4:
+                stats.score += 1600
+                Picture(self.screen, self.maze.blinky.rect.x, self.maze.blinky.rect.y, self.four_strike_img).draw_picture()
+                pygame.display.flip()
+                time.sleep(0.5)
 
         if self.pac_moving_left == True:
             self.maze.pacman.rect.centerx -= settings.movement
@@ -294,13 +437,34 @@ class EventLoop:
             del self.maze.tablets[tablet_collision]
             stats.score += 20
             self.life_up_check += 20
+            pygame.mixer.set_num_channels(1)
+            self.chomp.play()
+            pygame.mixer.set_num_channels(8)
 
         powerpill_collision = self.maze.pacman.rect.collidelist(self.maze.powerpills)
         if powerpill_collision >= 0:
             del self.maze.powerpills[powerpill_collision]
             self.fleeing = True
             self.fleeing_clock = self.settings.fleeing_clock
+            pygame.mixer.set_num_channels(1)
+            self.chomp.play()
+            pygame.mixer.set_num_channels(8)
 
+        self.blue_white_switch -= 1
+        if self.blue_white_switch <= 0 and self.white == False and self.fleeing_clock > math.floor(self.settings.fleeing_clock/4):
+            self.white = True
+            self.blue_white_switch = self.settings.blue_white_switch
+        elif self.blue_white_switch <= 0 and self.white == True and self.fleeing_clock > math.floor(self.settings.fleeing_clock/4):
+            self.white = False
+            self.blue_white_switch = self.settings.blue_white_switch
+
+        self.blue_white_switch_fast -= 1
+        if self.blue_white_switch_fast <= 0 and self.white == False and self.fleeing_clock <= math.floor(self.settings.fleeing_clock/4):
+            self.white = True
+            self.blue_white_switch_fast = self.settings.blue_white_switch_fast
+        elif self.blue_white_switch_fast <= 0 and self.white == True and self.fleeing_clock <= math.floor(self.settings.fleeing_clock/4):
+            self.white = False
+            self.blue_white_switch_fast = self.settings.blue_white_switch_fast
 
 
         self.pac_animation_clock -= 1
@@ -324,7 +488,114 @@ class EventLoop:
                 self.pac_up_animation = 'images/up_bigman_2.png'
                 self.pac_down_animation = 'images/down_bigman_2.png'
 
-            if self.ghost_animation_queue == 0:
+            if self.fleeing and self.ghost_animation_queue == 0 and self.white:
+                if not self.clyde_resetting:
+                    self.clyde_up_img = self.white_2_img
+                    self.clyde_down_img = self.white_2_img
+                    self.clyde_left_img = self.white_2_img
+                    self.clyde_right_img = self.white_2_img
+                if not self.pinky_resetting:
+                    self.pinky_up_img = self.white_2_img
+                    self.pinky_down_img = self.white_2_img
+                    self.pinky_left_img = self.white_2_img
+                    self.pinky_right_img = self.white_2_img
+                if not self.inky_resetting:
+                    self.inky_up_img = self.white_2_img
+                    self.inky_down_img = self.white_2_img
+                    self.inky_left_img = self.white_2_img
+                    self.inky_right_img = self.white_2_img
+                if not self.blinky_resetting:
+                    self.blinky_up_img = self.white_2_img
+                    self.blinky_down_img = self.white_2_img
+                    self.blinky_left_img = self.white_2_img
+                    self.blinky_right_img = self.white_2_img
+
+                self.ghost_animation_queue += 1
+            elif self.ghost_animation_queue == 1 and self.fleeing and self.white:
+                if not self.clyde_resetting:
+                    self.clyde_up_img = self.white_1_img
+                    self.clyde_down_img = self.white_1_img
+                    self.clyde_left_img = self.white_1_img
+                    self.clyde_right_img = self.white_1_img
+                if not self.pinky_resetting:
+                    self.pinky_up_img = self.white_1_img
+                    self.pinky_down_img = self.white_1_img
+                    self.pinky_left_img = self.white_1_img
+                    self.pinky_right_img = self.white_1_img
+                if not self.inky_resetting:
+                    self.inky_up_img = self.white_1_img
+                    self.inky_down_img = self.white_1_img
+                    self.inky_left_img = self.white_1_img
+                    self.inky_right_img = self.white_1_img
+                if not self.blinky_resetting:
+                    self.blinky_up_img = self.white_1_img
+                    self.blinky_down_img = self.white_1_img
+                    self.blinky_left_img = self.white_1_img
+                    self.blinky_right_img = self.white_1_img
+
+                self.ghost_animation_queue -= 1
+
+            if self.fleeing and self.ghost_animation_queue == 0 and not self.white:
+                self.clyde_up_img = self.blue_2_img
+                self.clyde_down_img = self.blue_2_img
+                self.clyde_left_img = self.blue_2_img
+                self.clyde_right_img = self.blue_2_img
+                self.pinky_up_img = self.blue_2_img
+                self.pinky_down_img = self.blue_2_img
+                self.pinky_left_img = self.blue_2_img
+                self.pinky_right_img = self.blue_2_img
+                self.inky_up_img = self.blue_2_img
+                self.inky_down_img = self.blue_2_img
+                self.inky_left_img = self.blue_2_img
+                self.inky_right_img = self.blue_2_img
+                self.blinky_up_img = self.blue_2_img
+                self.blinky_down_img = self.blue_2_img
+                self.blinky_left_img = self.blue_2_img
+                self.blinky_right_img = self.blue_2_img
+
+                self.ghost_animation_queue += 1
+            elif self.ghost_animation_queue == 1 and self.fleeing and not self.white:
+                self.clyde_up_img = self.blue_1_img
+                self.clyde_down_img = self.blue_1_img
+                self.clyde_left_img = self.blue_1_img
+                self.clyde_right_img = self.blue_1_img
+                self.pinky_up_img = self.blue_1_img
+                self.pinky_down_img = self.blue_1_img
+                self.pinky_left_img = self.blue_1_img
+                self.pinky_right_img = self.blue_1_img
+                self.inky_up_img = self.blue_1_img
+                self.inky_down_img = self.blue_1_img
+                self.inky_left_img = self.blue_1_img
+                self.inky_right_img = self.blue_1_img
+                self.blinky_up_img = self.blue_1_img
+                self.blinky_down_img = self.blue_1_img
+                self.blinky_left_img = self.blue_1_img
+                self.blinky_right_img = self.blue_1_img
+
+                self.ghost_animation_queue -= 1
+
+            if self.fleeing and self.clyde_resetting:
+                self.clyde_up_img = self.eyes_up_img
+                self.clyde_down_img = self.eyes_down_img
+                self.clyde_left_img = self.eyes_left_img
+                self.clyde_right_img = self.eyes_right_img
+            if self.fleeing and self.pinky_resetting:
+                self.pinky_up_img = self.eyes_up_img
+                self.pinky_down_img = self.eyes_down_img
+                self.pinky_left_img = self.eyes_left_img
+                self.pinky_right_img = self.eyes_right_img
+            if self.fleeing and self.inky_resetting:
+                self.inky_up_img = self.eyes_up_img
+                self.inky_down_img = self.eyes_down_img
+                self.inky_left_img = self.eyes_left_img
+                self.inky_right_img = self.eyes_right_img
+            if self.fleeing and self.blinky_resetting:
+                self.blinky_up_img = self.eyes_up_img
+                self.blinky_down_img = self.eyes_down_img
+                self.blinky_left_img = self.eyes_left_img
+                self.blinky_right_img = self.eyes_right_img
+
+            if self.ghost_animation_queue == 0 and not self.fleeing:
                 self.clyde_up_img = self.clyde_up_2_img
                 self.clyde_down_img = self.clyde_down_2_img
                 self.clyde_left_img = self.clyde_left_2_img
@@ -343,7 +614,7 @@ class EventLoop:
                 self.blinky_right_img = self.blinky_right_2_img
 
                 self.ghost_animation_queue += 1
-            elif self.ghost_animation_queue == 1:
+            elif self.ghost_animation_queue == 1 and not self.fleeing:
                 self.clyde_up_img = self.clyde_up_1_img
                 self.clyde_down_img = self.clyde_down_1_img
                 self.clyde_left_img = self.clyde_left_1_img
@@ -371,20 +642,39 @@ class EventLoop:
         self.fleeing_clock -= 1
         if self.fleeing_clock <= 0:
             self.fleeing = False
+            self.resetting_count = 0
+            self.clyde_resetting = False
+            self.pinky_resetting = False
+            self.inky_resetting = False
+            self.blinky_resetting = False
 
-        if self.search_clock == 150 and self.fleeing:
+        if self.clyde_resetting and self.search_clock == 150:
+            clydeNode = self.getObjectNode("clyde")
+            self.clyde_path = Dijkstra(clydeNode, self.settings.ghost_starting_node, self.maze.nodeDict)
+        if self.pinky_resetting and self.search_clock == 100:
+            pinkyNode = self.getObjectNode("pinky")
+            self.pinky_path = Dijkstra(pinkyNode, self.settings.ghost_starting_node, self.maze.nodeDict)
+        if self.inky_resetting and self.search_clock == 50:
+            inkyNode = self.getObjectNode("inky")
+            self.inky_path = Dijkstra(inkyNode, self.settings.ghost_starting_node, self.maze.nodeDict)
+        if self.blinky_resetting and self.search_clock <= 0:
+            blinkyNode = self.getObjectNode("blinky")
+            self.blinky_path = Dijkstra(blinkyNode, self.settings.ghost_starting_node, self.maze.nodeDict)
+            self.search_clock = self.settings.search_clock
+
+        if self.search_clock == 150 and self.fleeing and not self.clyde_resetting:
             random_clyde_path = random.choice(list(self.maze.nodeDict.keys()))
             clydeNode = self.getObjectNode("clyde")
             self.clyde_path = Dijkstra(clydeNode, random_clyde_path, self.maze.nodeDict)
-        if self.search_clock == 100 and self.fleeing:
+        if self.search_clock == 100 and self.fleeing and not self.pinky_resetting:
             random_pinky_path = random.choice(list(self.maze.nodeDict.keys()))
             pinkyNode = self.getObjectNode("pinky")
             self.pinky_path = Dijkstra(pinkyNode, random_pinky_path, self.maze.nodeDict)
-        if self.search_clock == 50 and self.fleeing:
+        if self.search_clock == 50 and self.fleeing and not self.inky_resetting:
             random_inky_path = random.choice(list(self.maze.nodeDict.keys()))
             inkyNode = self.getObjectNode("inky")
             self.inky_path = Dijkstra(inkyNode, random_inky_path, self.maze.nodeDict)
-        if self.search_clock <= 0 and self.fleeing:
+        if self.search_clock <= 0 and self.fleeing and not self.blinky_resetting:
             random_blinky_path = random.choice(list(self.maze.nodeDict.keys()))
             blinkyNode = self.getObjectNode("blinky")
             self.blinky_path = Dijkstra(blinkyNode, random_blinky_path, self.maze.nodeDict)
@@ -416,6 +706,7 @@ class EventLoop:
         if self.life_up_check >= 10000:
             stats.lives += 1
             self.life_up_check = 0
+            self.extra_pac.play()
 
     def updateGhost(self, identifier):
         if identifier == "clyde":
