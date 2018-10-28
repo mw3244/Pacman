@@ -7,6 +7,7 @@ from dijkstra import Dijkstra
 from button import Text
 from stats import Stats
 import math
+import random
 
 class EventLoop:
     def __init__(self, maze, screen, finished):
@@ -119,6 +120,8 @@ class EventLoop:
         self.inky_path = []
         self.blinky_path = []
         self.ghost_move_OK = False
+        self.fleeing = False
+        self.fleeing_clock = self.settings.fleeing_clock
 
     def __str__(self):
         return 'eventloop, finished= ' + str(self.finished) + ')'
@@ -148,7 +151,8 @@ class EventLoop:
 
     def update(self, settings, screen, stats):
         if (self.maze.pacman.rect.colliderect(self.maze.clyde.rect) or self.maze.pacman.rect.colliderect(self.maze.pinky.rect)
-        or self.maze.pacman.rect.colliderect(self.maze.inky.rect) or self.maze.pacman.rect.colliderect(self.maze.blinky.rect)):
+        or self.maze.pacman.rect.colliderect(self.maze.inky.rect) or self.maze.pacman.rect.colliderect(self.maze.blinky.rect))\
+        and not self.fleeing:
             img = pygame.image.load('images/pac_death_1.png')
             img = pygame.transform.scale(img, (self.maze.psz, self.maze.psz))
             self.maze.pacman.image = img
@@ -246,6 +250,13 @@ class EventLoop:
             pygame.display.flip()
             time.sleep(2)
 
+        if not self.maze.tablets and not self.maze.powerpills:
+            self.maze.shields = []
+            self.maze.bricks = []
+            self.fleeing = False
+            self.maze.build()
+            time.sleep(2)
+
         if self.pac_moving_left == True:
             self.maze.pacman.rect.centerx -= settings.movement
             img = pygame.image.load(self.pac_left_animation)
@@ -283,6 +294,12 @@ class EventLoop:
             del self.maze.tablets[tablet_collision]
             stats.score += 20
             self.life_up_check += 20
+
+        powerpill_collision = self.maze.pacman.rect.collidelist(self.maze.powerpills)
+        if powerpill_collision >= 0:
+            del self.maze.powerpills[powerpill_collision]
+            self.fleeing = True
+            self.fleeing_clock = self.settings.fleeing_clock
 
 
 
@@ -351,20 +368,41 @@ class EventLoop:
             self.pac_animation_clock = self.settings.pac_animation_clock
 
         self.search_clock -= 1
+        self.fleeing_clock -= 1
+        if self.fleeing_clock <= 0:
+            self.fleeing = False
 
-        if self.search_clock == 150:
+        if self.search_clock == 150 and self.fleeing:
+            random_clyde_path = random.choice(list(self.maze.nodeDict.keys()))
+            clydeNode = self.getObjectNode("clyde")
+            self.clyde_path = Dijkstra(clydeNode, random_clyde_path, self.maze.nodeDict)
+        if self.search_clock == 100 and self.fleeing:
+            random_pinky_path = random.choice(list(self.maze.nodeDict.keys()))
+            pinkyNode = self.getObjectNode("pinky")
+            self.pinky_path = Dijkstra(pinkyNode, random_pinky_path, self.maze.nodeDict)
+        if self.search_clock == 50 and self.fleeing:
+            random_inky_path = random.choice(list(self.maze.nodeDict.keys()))
+            inkyNode = self.getObjectNode("inky")
+            self.inky_path = Dijkstra(inkyNode, random_inky_path, self.maze.nodeDict)
+        if self.search_clock <= 0 and self.fleeing:
+            random_blinky_path = random.choice(list(self.maze.nodeDict.keys()))
+            blinkyNode = self.getObjectNode("blinky")
+            self.blinky_path = Dijkstra(blinkyNode, random_blinky_path, self.maze.nodeDict)
+            self.search_clock = self.settings.search_clock
+
+        if self.search_clock == 150 and not self.fleeing:
             pacNode = self.getObjectNode("pacman")
             clydeNode = self.getObjectNode("clyde")
             self.clyde_path = Dijkstra(clydeNode, pacNode, self.maze.nodeDict)
-        if self.search_clock == 100:
+        if self.search_clock == 100 and not self.fleeing:
             pacNode = self.getObjectNode("pacman")
             pinkyNode = self.getObjectNode("pinky")
             self.pinky_path = Dijkstra(pinkyNode, pacNode, self.maze.nodeDict)
-        if self.search_clock == 50:
+        if self.search_clock == 50 and not self.fleeing:
             pacNode = self.getObjectNode("pacman")
             inkyNode = self.getObjectNode("inky")
             self.inky_path = Dijkstra(inkyNode, pacNode, self.maze.nodeDict)
-        if self.search_clock <= 0:
+        if self.search_clock <= 0 and not self.fleeing:
             pacNode = self.getObjectNode("pacman")
             blinkyNode = self.getObjectNode("blinky")
             self.blinky_path = Dijkstra(blinkyNode, pacNode, self.maze.nodeDict)

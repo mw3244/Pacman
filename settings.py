@@ -7,3 +7,4 @@ class Settings():
         self.ghost_movement = 1
         self.pac_animation_clock = 30
         self.search_clock = 200
+        self.fleeing_clock = 4000
