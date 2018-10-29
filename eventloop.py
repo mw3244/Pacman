@@ -269,8 +269,15 @@ class EventLoop:
             time.sleep(1)
 
             stats.lives -= 1
-            if stats.lives == 0:
-                print("Game over!")
+            if stats.lives <= 0:
+                self.finished = True
+                stats.lives = 3
+                if stats.score > stats.high_score:
+                    stats.high_score = stats.score
+                    file = open('highscore.txt', 'w')
+                    file.write(str(stats.high_score))
+                    file.close()
+                stats.score = 0
             self.maze.pacman.rect.x = self.maze.pacman_init_x
             self.maze.pacman.rect.y = self.maze.pacman_init_y
             self.maze.clyde.rect.x = self.maze.clyde_init_x

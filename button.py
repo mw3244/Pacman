@@ -23,3 +23,4 @@ class Picture():
     def draw_picture(self):
         self.screen.blit(self.image, (self.x, self.y))
 
+
